@@ -4,6 +4,11 @@
   "name": "Ethereum",
   "description": "Ethereum Gateway",
   "version": "1.0",
+  "icons": {
+      "19": "images/ethereum_logo19.png",      
+      "38": "images/ethereum_logo38.png",
+      "128": "images/ethereum_logo128.png"           
+  },
 
   "background": {
     "scripts": ["js/background.js" ],
