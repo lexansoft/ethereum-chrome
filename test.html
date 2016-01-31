@@ -12,7 +12,22 @@
 <script>
     
 console.log( "test.html is here" )
-//alert( web3 )    
+
+
+/* first of all set up the web3 object. THis should work in Mist as well */
+if(typeof web3 === 'undefined')
+{
+    Web3 = require('web3');
+    web3 = new Web3();            
+}
+
+if( web3.currentProvider == null )
+    web3.setProvider( new web3.providers.HttpProvider( ) );     
+
+web3.eth.gasPrice( function(error, result) {
+   alert( result )
+    
+});
 
 window.addEventListener('message', function(event) {
     console.log('page javascript got message:', event);

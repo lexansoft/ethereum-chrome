@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "background": {
-    "scripts": [ "js/bundle.js", "js/background.js" ],
+    "scripts": ["js/background.js" ],
     "persistent": true      
   },    
     
@@ -29,7 +29,7 @@
       "matches": [
           "<all_urls>"
       ],
-      "js": [ "js/content.js"],
+      "js": [  "js/web3_str.js", "js/page_str.js", "js/content.js"],
       "run_at": "document_start",
       "all_frames": false    
     }

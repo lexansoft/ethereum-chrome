@@ -1,5 +1,8 @@
 #!/bin/sh
 
-#browserify  -r web3 -r url -r jquery | uglifyjs > plugin/js/bundle.js
+browserify  -r web3 | uglifyjs | sed -e 's/require/___require___/g' -e 's/\\/\\\\/g' -e 's/\"/\\\"/g' -e 's/^/\"/g' -e 's/$/\\n\"+/g' -e '1s/^/web3_str_js=/'  >  plugin/js/web3_str.js
+echo "\"\";" >> plugin/js/web3_str.js
 
-browserify  -r web3 | uglifyjs | sed -e 's/\"/\\\"/g' -e 's/^/\"/g' -e 's/$/\"\+/g' -e '1s/^/bundle_js_str=/' >> "HAHAHA" >  plugin/js/bundle.js
+
+sed -e 's/\\/\\\\/g' -e 's/\"/\\\"/g' -e 's/^/\"/g' -e 's/$/\\n\"+/g' -e '1s/^/page_str_js=/' < plugin_modules/page.js >  plugin/js/page_str.js
+echo "\"\";" >> plugin/js/page_str.js
