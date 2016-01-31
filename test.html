@@ -1,49 +1,92 @@
 <html>
-
+<head>
+<style>
+    body { font-family: monospace }
+</head>
+</style>
 
 <body>
-    
 
-    <a href="web+eid://test">Test</a>
-    
-</body>
-
+<div id=text></div>
 
 <script>
+current_test = 0;
+
+var tests = [
+    function() {
+        write( "Test: Initialization of web3 object" )
+        if( typeof web3 === "undefined ") failed()
+        else passed();
+    },
+    function() {
+        write( "Test: Check web3 provider" )
+        if( web3.currentProvider.constructor.name == "PluginProvider") passed()
+        else failed()
+    },
+    function() {
+        write( "Test: Get GasPrice" )
+        web3.eth.getGasPrice( function( error, result ) {
+            if( error ) failed( error )
+            else {
+                writeln( " GasPrice = " + result )
+                passed()
+            }            
+        });
+    },
+]
     
-console.log( "test.html is here" )
-
-
-/* first of all set up the web3 object. THis should work in Mist as well */
-if(typeof web3 === 'undefined')
+    
+function write( t )    
 {
-    Web3 = require('web3');
-    web3 = new Web3();            
+    s = document.createElement('span');    
+    s.innerHTML = t
+    document.getElementById( "text").appendChild( s )
 }
 
-if( web3.currentProvider == null )
-    web3.setProvider( new web3.providers.HttpProvider( ) );     
-
-web3.eth.gasPrice( function(error, result) {
-   alert( result )
+function writeln( t )    
+{
+    write( t + "<br>")
+}
     
-});
-
-window.addEventListener('message', function(event) {
-    console.log('page javascript got message:', event);
-});    
     
+function passed( ) {
+    writeln( " PASSED ")
+    nextTest()
+}    
+
+function failed( t ) {
+    if( typeof t === "undefined ") t = ""
+    writeln( " ***FAILED*** " + t)
+    nextTest()
+}    
+    
+function nextTest() {
+    if( current_test < tests.length ) {
+        current_test++
+        tests[current_test - 1]()
+    }
+}
+    
+nextTest()    
+
+
+//
+//
+//window.addEventListener('message', function(event) {
+//    console.log('page javascript got message:', event);
+//});    
+//    
 //    
 //window.postMessage({ type: 'page_js_type',
 //                         text: "Hello from the page's javascript!"},   
 //              '*' /* targetOrigin: any */);                   
     
 //console.log( "ETHEREUM=" + ETHEREUM)
-    
 
     
 </script>    
     
+</body>
     
 
 </html>

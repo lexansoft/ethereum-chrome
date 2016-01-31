@@ -18,7 +18,7 @@ s.textContent = '(' + function(send_event_name, reply_event_name ) {
     
     console.log( "injection is here!!!")
     
-    window._call_ethereum_plugin = function ( message, callback) {
+    window._call_ethereum_plugin = function ( message, callback ) {
         var transporter = document.createElement('dummy');
         // Handles reply:
         transporter.addEventListener(reply_event_name, function(event) {
@@ -26,8 +26,8 @@ s.textContent = '(' + function(send_event_name, reply_event_name ) {
             if (this.parentNode) this.parentNode.removeChild(this);
             // After having cleaned up, send callback if needed:
             if (typeof callback == 'function') {
-                result = JSON.parse(result);
-                callback(result);
+                response = JSON.parse(result);
+                callback( response );
             }
         });
         // Functionality to notify content script

@@ -1,4 +1,4 @@
-var PluginProvider = function () {
+var PluginProvider = function PluginProvider() {
     
 };
 
@@ -10,57 +10,31 @@ var PluginProvider = function () {
 //    return request;
 //};
 
-(function() {
-        var timeouts = [];
-        var messageName = "zero-timeout-message";
-
-        // Like setTimeout, but only takes a function argument.  There's
-        // no time argument (always zero) and no arguments (you have to
-        // use a closure).
-        function setZeroTimeout(fn) {
-            timeouts.push(fn);
-            window.postMessage(messageName, "*");
-        }
-
-        function handleMessage(event) {
-            if (event.source == window && event.data == messageName) {
-                event.stopPropagation();
-                if (timeouts.length > 0) {
-                    var fn = timeouts.shift();
-                    fn();
-                }
-            }
-        }
-
-        window.addEventListener("message", handleMessage, true);
-
-        // Add the one thing we want added to the window object.
-        window.setZeroTimeout = setZeroTimeout;
-})();
 
 PluginProvider.prototype.send = function (payload) {
-    console.log( "PluginProvider:send")
-    returned_result = null
-    returned_error = 0
-    done = false;
-
-    this.sendAsync( payload, function( error, result ) {
-        returned_error = error;
-        returned_result = result;
-        done = true;
-        
-    }) 
-    
-    start_time = new Date()
-    while( ! done ) { 
-        if( new Date() - start_time >= 20000 ) {
-            throw new Error( "PluginProvider TimeOut" )
-        }    
-        window.setZeroTimeout( function(){})
-    }
-    
-    if( returned_error ==  0 ) return returned_result
-    else throw new Error( returned_error )
+    throw new Error( "Ethereum Plugin does not support syncronious web3 calls.")
+//    console.log( "PluginProvider:send")
+//    returned_result = null
+//    returned_error = 0
+//    done = false;
+//
+//    this.sendAsync( payload, function( error, result ) {
+//        returned_error = error;
+//        returned_result = result;
+//        done = true;
+//        
+//    }) 
+//    
+//    start_time = new Date()
+//    while( ! done ) { 
+//        if( new Date() - start_time >= 10000 ) {
+//            throw new Error( "PluginProvider TimeOut" )
+//        }    
+//        setTimeout(function(){}, 0);
+//    }
+//    
+//    if( returned_error ==  0 ) return returned_result
+//    else throw new Error( returned_error )
 };
 
 PluginProvider.prototype.sendAsync = function (payload, callback) {
@@ -70,9 +44,8 @@ PluginProvider.prototype.sendAsync = function (payload, callback) {
         type: 'sendAsync',
         data: payload
         }, function( response ) {
-            response = response;
+            callback( JSON.stringify({ error: 0, data: response }) );
             
-            //callback( error, result )
         });
     
     
