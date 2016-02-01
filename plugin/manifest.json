@@ -3,7 +3,7 @@
 
   "name": "Ethereum",
   "description": "Ethereum Gateway",
-  "version": "1.0",
+  "version": "0.0.2",
   "icons": {
       "19": "images/ethereum_logo19.png",      
       "38": "images/ethereum_logo38.png",
@@ -11,7 +11,10 @@
   },
 
   "background": {
-    "scripts": ["js/background.js" ],
+    "scripts": [
+        "js/httpprovider.js", 
+        "js/background.js" 
+    ],
     "persistent": true      
   },    
     
@@ -39,8 +42,8 @@
       "all_frames": false    
     }
   ],    
-    
-  "web_accessible_resources": [
+
+    "web_accessible_resources": [
     "js/bundle.js",
     "js/page.js"
   ],    
