@@ -37,7 +37,7 @@
       "matches": [
           "<all_urls>"
       ],
-      "js": [  "js/web3_str.js", "js/page_str.js", "js/content.js"],
+      "js": [  "js/page_bundle_str.js", "js/web3_str.js", "js/page_str.js", "js/content.js"],
       "run_at": "document_start",
       "all_frames": false    
     }

@@ -3,6 +3,11 @@ var EVENT_REPLY = '__rw_chrome_ext_reply_ethereum'
 var TRANSPORTER_ID = '__ethereum_plugin_event_transporter__'
 
 s = document.createElement('script');
+s.textContent = page_bundle_str_js
+document.documentElement.appendChild(s);
+s.parentNode.removeChild(s);
+
+s = document.createElement('script');
 s.textContent = web3_str_js
 document.documentElement.appendChild(s);
 s.parentNode.removeChild(s);
@@ -26,9 +31,9 @@ s.textContent = '(' + function(send_event_name, reply_event_name ) {
             
             transporter.addEventListener( reply_event_name, function(event) {
                 var result = this.getAttribute('result');
-//                if (this.parentNode) this.parentNode.removeChild(this);
+                if (this.parentNode) this.parentNode.removeChild(this);
                 // After having cleaned up, send callback if needed:
-                if (typeof callback == 'function') {
+                if (typeof callback == 'function' && !!result ) {
                     response = JSON.parse(result);
                     callback( response );
                 }
@@ -75,7 +80,6 @@ chrome.runtime.onMessage.addListener( function(message ) {
         
         s = document.createElement('script');
         s.textContent = '(' + function( message ) {
-            console.log( "injection is here!!! " + message )
 
             if( web3.currentProvider.constructor.name == "PluginProvider") {
                 

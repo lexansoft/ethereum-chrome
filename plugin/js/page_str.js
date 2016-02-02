@@ -1,5 +1,7 @@
-page_str_js="// web3 provider to communicate with the plugin\n"+
+page_str_js="\n"+
+"// web3 provider to communicate with the plugin\n"+
 "var PluginProvider = function PluginProvider() {\n"+
+"    this.uuid = ___require___('uuid')\n"+
 "    this.MAX_MESSAGES_IN_POOL = 1000    // maximum number of active messages\n"+
 "    this.TIMEOUT = 60000                // forget about message after that seccons\n"+
 "    \n"+
@@ -11,7 +13,7 @@ page_str_js="// web3 provider to communicate with the plugin\n"+
 "        {\n"+
 "            data: \n"+
 "            {\n"+
-"                id: 123,\n"+
+"                id: this.uuid.v4(),\n"+
 "                type: 'sendAsync',\n"+
 "                data: dataload\n"+
 "            },\n"+
@@ -46,19 +48,28 @@ page_str_js="// web3 provider to communicate with the plugin\n"+
 "        msg = this.newMessage( dataload, callback )\n"+
 "        this.message_pool[ msg.data.id ] = msg;\n"+
 "        \n"+
-"        _call_ethereum_plugin\n"+
-"        ( \n"+
-"            msg.data\n"+
-"            , \n"+
-"            function( response ) \n"+
-"            {\n"+
-"                //?????\n"+
-"            }\n"+
-"        );\n"+
+"        _call_ethereum_plugin( msg.data, function() {} );\n"+
 "    }\n"+
 "    this.isConnected = function() { return true; }\n"+
 "    \n"+
-"    this.onPlugingEvent = function( data ) {\n"+
+"    this.onPlugingEvent = function( msg ) {\n"+
+"//        console.log( \"onPlugingEvent=\" + JSON.stringify( msg ) );\n"+
+"//        \n"+
+"//        onPlugingEvent={\"type\":\"ethereum_bg2content\",\"dataload\":{\"error\":null,\"data\":{\"id\":1,\"jsonrpc\":\"2.0\",\"result\":\"0xba43b7400\"},\"id\":\"ad5c168f-e8cf-4c1f-baf6-6b09050999f3\"}}\n"+
+"        \n"+
+"        if( msg.type == \"ethereum_bg2content\") {\n"+
+"            orig_msg = this.message_pool[ msg.id ] \n"+
+"            if( orig_msg )\n"+
+"            {\n"+
+"                 delete this.message_pool[ msg.id ]\n"+
+"                 orig_msg.callback( msg.dataload.error, msg.dataload.data )                    \n"+
+"            }\n"+
+"            else\n"+
+"            {\n"+
+"                console.log( \"No original message found. Probably expired. id: \" + msg.id );        \n"+
+"            }\n"+
+"        }\n"+
+"        \n"+
 "        console.log( \"Got back to provider!!!\");\n"+
 "    }\n"+
 "};\n"+

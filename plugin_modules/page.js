@@ -1,5 +1,7 @@
+
 // web3 provider to communicate with the plugin
 var PluginProvider = function PluginProvider() {
+    this.uuid = ___require___('uuid')
     this.MAX_MESSAGES_IN_POOL = 1000    // maximum number of active messages
     this.TIMEOUT = 60000                // forget about message after that seccons
     
@@ -11,7 +13,7 @@ var PluginProvider = function PluginProvider() {
         {
             data: 
             {
-                id: 123,
+                id: this.uuid.v4(),
                 type: 'sendAsync',
                 data: dataload
             },
@@ -46,19 +48,28 @@ var PluginProvider = function PluginProvider() {
         msg = this.newMessage( dataload, callback )
         this.message_pool[ msg.data.id ] = msg;
         
-        _call_ethereum_plugin
-        ( 
-            msg.data
-            , 
-            function( response ) 
-            {
-                //?????
-            }
-        );
+        _call_ethereum_plugin( msg.data, function() {} );
     }
     this.isConnected = function() { return true; }
     
-    this.onPlugingEvent = function( data ) {
+    this.onPlugingEvent = function( msg ) {
+//        console.log( "onPlugingEvent=" + JSON.stringify( msg ) );
+//        
+//        onPlugingEvent={"type":"ethereum_bg2content","dataload":{"error":null,"data":{"id":1,"jsonrpc":"2.0","result":"0xba43b7400"},"id":"ad5c168f-e8cf-4c1f-baf6-6b09050999f3"}}
+        
+        if( msg.type == "ethereum_bg2content") {
+            orig_msg = this.message_pool[ msg.id ] 
+            if( orig_msg )
+            {
+                 delete this.message_pool[ msg.id ]
+                 orig_msg.callback( msg.dataload.error, msg.dataload.data )                    
+            }
+            else
+            {
+                console.log( "No original message found. Probably expired. id: " + msg.id );        
+            }
+        }
+        
         console.log( "Got back to provider!!!");
     }
 };
