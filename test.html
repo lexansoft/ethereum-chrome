@@ -29,7 +29,7 @@ var tests = [
         web3.eth.getGasPrice( function( error, result ) {
             if( error ) failed( error )
             else {
-                writeln( " GasPrice = " + result )
+                write( " GasPrice = " + result )
                 passed()
             }            
         });

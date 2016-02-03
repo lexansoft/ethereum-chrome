@@ -1,5 +1,8 @@
 httpProvider = new HttpProvider()
 
+Web3 = require( "web3")
+web3 = new Web3( httpProvider )
+
 function _call_content_page( tab, dataload, id ) {
       chrome.tabs.sendMessage(tab.id, 
       {
@@ -11,6 +14,10 @@ function _call_content_page( tab, dataload, id ) {
 
 chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
     if (message && message.type == 'ethereum_content2bg') {
+        
+        chrome.pageAction.show( sender.tab.id ) //turn on the icon if needed
+        
+        
         if( !!message.request && !!message.request.type && message.request.data ) {
             if( message.request.type == "sendAsync" ) {
                 httpProvider.sendAsync( message.request.data, function( error, data ) {

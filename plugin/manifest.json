@@ -12,6 +12,7 @@
 
   "background": {
     "scripts": [
+        "js/bg_bundle.js", 
         "js/httpprovider.js", 
         "js/background.js" 
     ],
@@ -19,7 +20,7 @@
   },    
     
   "options_ui": {
-    "page": "options.html",
+    "page": "templates/options.html",
     "chrome_style": true
   },
     
@@ -28,8 +29,8 @@
         "19": "images/ethereum_logo19.png",      
         "38": "images/ethereum_logo38.png"           
     },
-    "default_title": "thereum",      
-    "default_popup": "popup.html"        
+    "default_title": "Ethereum",      
+    "default_popup": "templates/popup.html"        
     },
     
   "content_scripts": [
