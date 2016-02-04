@@ -1,9 +1,9 @@
-httpProvider = new HttpProvider()
+httpProvider = require( "./httpprovider.js" )
 
 Web3 = require( "web3")
 web3 = new Web3( httpProvider )
 
-tabs = require( "/plugin_modules/ep_tabs.js" )
+tabs = require( "./tabs.js" )
 
 function _call_content_page( tab, dataload, id ) {
       chrome.tabs.sendMessage(tab.id, 
