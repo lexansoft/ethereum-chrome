@@ -1,7 +1,9 @@
-httpProvider = new HttpProvider()
+httpProvider = require( "./httpprovider.js" )
 
 Web3 = require( "web3")
 web3 = new Web3( httpProvider )
+
+tabs = require( "./tabs.js" )
 
 function _call_content_page( tab, dataload, id ) {
       chrome.tabs.sendMessage(tab.id, 
@@ -15,8 +17,8 @@ function _call_content_page( tab, dataload, id ) {
 chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
     if (message && message.type == 'ethereum_content2bg') {
         
-        chrome.pageAction.show( sender.tab.id ) //turn on the icon if needed
-        
+        tabs.showPageIcon( sender.tab.id )
+        //tabs.needUserAction( sender.tab.id, true ) //DEBUG
         
         if( !!message.request && !!message.request.type && message.request.data ) {
             if( message.request.type == "sendAsync" ) {
@@ -42,4 +44,13 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
     }
     
     sendResponse( {} )
+});
+
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatedTab) {
+    tabs.deleteTab( tabId ) 
+});
+
+chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    tabs.deleteTab( tabId )
 });

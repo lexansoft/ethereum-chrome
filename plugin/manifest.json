@@ -12,9 +12,7 @@
 
   "background": {
     "scripts": [
-        "js/bg_bundle.js", 
-        "js/httpprovider.js", 
-        "js/background.js" 
+        "js/bg_bundle.js"
     ],
     "persistent": true      
   },    
