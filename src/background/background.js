@@ -5,6 +5,7 @@ web3 = new Web3( httpProvider )
 
 tabs = require( "./tabs.js" )
 
+
 function _call_content_page( tab, dataload, id ) {
       chrome.tabs.sendMessage(tab.id, 
       {

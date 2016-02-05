@@ -1,6 +1,7 @@
 // Module encapsulates the Tab information
 var ICON_BLINKING_TIMEOUT = 300
 
+Queue = require( "./queue.js" )
 
 module.exports = new function() {
     this.all_tabs = {}
@@ -22,6 +23,7 @@ module.exports = new function() {
             current_icon_index: 0, 
             user_action_is_needed: false,
             icon_is_shown: false,
+            queue: new Queue( 1000, 15*60*1000 ),
 
             flipPageIcon: function flipPageIcon() {
                 this.current_icon_index = ( this.current_icon_index + 1 ) % 2

@@ -13,6 +13,12 @@ import ActionCopyright from 'material-ui/lib/svg-icons/action/copyright';
 import CommunicationVpnKey from 'material-ui/lib/svg-icons/communication/vpn-key';
 import IconButton from 'material-ui/lib/icon-button';
 
+import NodeInfo from './node_info.jsx';
+import Accounts from './accounts.jsx';
+import Confirmations from './confirmations.jsx';
+import About from './about.jsx';
+import Settings from './settings.jsx';
+
 injectTapEventPlugin();
 
 
@@ -20,7 +26,8 @@ const EPApp = React.createClass({
     getInitialState() {
         return {
             left_nav_open: false,
-            active_pane: "info"
+            active_pane: "info",
+            title: "Node Info"
         };
     },    
     
@@ -32,17 +39,17 @@ const EPApp = React.createClass({
         window.close()
     },
     
-    openPaneInfo() {  this.setState( { left_nav_open: false, active_pane: "info" } ) },    
-    openPaneAccounts() {  this.setState( { left_nav_open: false, active_pane: "accounts" } ) },    
-    openPaneConfirmations() {  this.setState( { left_nav_open: false, active_pane: "confirmations" } ) },    
-    openPaneSettings() {  this.setState( { left_nav_open: false, active_pane: "settings" } ) },    
-    openPaneAbout() {  this.setState( { left_nav_open: false, active_pane: "about" } ) },    
+    openPaneInfo() {  this.setState( { left_nav_open: false, active_pane: "info", title: "Node Info" } ) },    
+    openPaneAccounts() {  this.setState( { left_nav_open: false, active_pane: "accounts", title: "Accounts" } ) },    
+    openPaneConfirmations() {  this.setState( { left_nav_open: false, active_pane: "confirmations", title: "Confirmations" } ) },    
+    openPaneSettings() {  this.setState( { left_nav_open: false, active_pane: "settings", title: "Settings" } ) },    
+    openPaneAbout() {  this.setState( { left_nav_open: false, active_pane: "about", title: "About" } ) },    
 
     render() {
         return (
             <div>
                 <AppBar
-                    title="Ethereum Plugin"
+                    title= { this.state.title }
                     iconElementRight={
                           <IconButton onClick={ this.closeWindow }><NavigationClose /></IconButton>
                         }
@@ -55,6 +62,13 @@ const EPApp = React.createClass({
                 open={ this.state.left_nav_open }
                 onRequestChange={ left_nav_open => this.setState({left_nav_open})}
             >
+    
+                <AppBar
+                    title="Ethereum Plugin"
+                    iconElementLeft={<div/>}
+                    style={ { textAlign: 'center' } }
+               />
+                                
               <MenuItem primaryText="Node Info" leftIcon={<ActionInfoOutline />} onTouchTap={ this.openPaneInfo } />    
               <MenuItem primaryText="Accounts" leftIcon={<ActionAccountBalance />} onTouchTap={ this.openPaneAccounts } />  
               <MenuItem primaryText="Confirmations" leftIcon={<CommunicationVpnKey />} onTouchTap={ this.openPaneConfirmations } />  
@@ -64,19 +78,19 @@ const EPApp = React.createClass({
 
                 
                 <div style={ {display: ( this.state.active_pane == "info" ? "block" : "none" ) } } > 
-                    <h1>Sorry, still under construction</h1>
+                    <NodeInfo/>
                 </div>
                 <div style={ {display: ( this.state.active_pane == "accounts" ? "block" : "none" ) } } > 
-                    <h1>Sorry, still under construction</h1>
+                    <Accounts/>
                 </div>
                 <div style={ {display: ( this.state.active_pane == "confirmations" ? "block" : "none" ) } } > 
-                    <h1>Sorry, still under construction</h1>
+                    <Confirmations/>
                 </div>
                 <div style={ {display: ( this.state.active_pane == "settings" ? "block" : "none" ) } } > 
-                    <h1>Sorry, still under construction</h1>
+                    <Settings/>
                 </div>
                 <div style={ {display: ( this.state.active_pane == "about" ? "block" : "none" ) } } > 
-                    <h1>Sorry, still under construction</h1>
+                    <About/>
                 </div>
                 
         </div>
