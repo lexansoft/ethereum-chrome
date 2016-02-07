@@ -1,7 +1,7 @@
 // A simple cache of transactions.
 
 
-module.exports = new function( max_total, expiration_time ) {
+module.exports = function( max_total, expiration_time ) {
     this.max_total = max_total
     this.expiration_time = expiration_time 
     

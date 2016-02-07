@@ -2,10 +2,11 @@ page_str_js="\n"+
 "// web3 provider to communicate with the plugin\n"+
 "var PluginProvider = function PluginProvider() {\n"+
 "    this.uuid = ___require___('uuid')\n"+
+"    this.Queue = ___require___('/src/background/queue.js')\n"+
 "    this.MAX_MESSAGES_IN_POOL = 1000    // maximum number of active messages\n"+
 "    this.TIMEOUT = 60000                // forget about message after that seccons\n"+
 "    \n"+
-"    this.message_pool = {}\n"+
+"    this.message_pool = new this.Queue( this.MAX_MESSAGES_IN_POOL, this.TIMEOUT )\n"+
 "    \n"+
 "    this.newMessage = function( dataload, callback )\n"+
 "    {\n"+
@@ -30,23 +31,15 @@ page_str_js="\n"+
 "\n"+
 "    this.sendAsync = function ( dataload, callback) {\n"+
 "        console.log( \"PluginProvider:sendAsync\");\n"+
-"        \n"+
-"        if( this.message_pool.length >= this.MAX_MESSAGES_IN_POOL ) {\n"+
-"            //try to clean the pool\n"+
-"            \n"+
-"            for( var m in this.message_pool ) {\n"+
-"                if( new Date().getTime() - m.created > this.TIMEOUT ) {\n"+
-"                    delete this.message_pool[ m.data.id ];\n"+
-"                }\n"+
-"            }\n"+
-"        }\n"+
 "\n"+
-"        if( this.message_pool.length >= this.MAX_MESSAGES_IN_POOL ) {\n"+
-"            callback( new Error( \"Too many incompleted transactions...\"))        \n"+
+"        try {\n"+
+"            msg = this.newMessage( dataload, callback )\n"+
+"            this.message_pool.add( msg, msg.data.id )\n"+
 "        }\n"+
-"        \n"+
-"        msg = this.newMessage( dataload, callback )\n"+
-"        this.message_pool[ msg.data.id ] = msg;\n"+
+"        catch( x ) {\n"+
+"            callback( new Error( \"Too many incompleted transactions...\"))        \n"+
+"            return;\n"+
+"        }\n"+
 "        \n"+
 "        _call_ethereum_plugin( msg.data, function() {} );\n"+
 "    }\n"+
@@ -58,7 +51,7 @@ page_str_js="\n"+
 "//        onPlugingEvent={\"type\":\"ethereum_bg2content\",\"dataload\":{\"error\":null,\"data\":{\"id\":1,\"jsonrpc\":\"2.0\",\"result\":\"0xba43b7400\"},\"id\":\"ad5c168f-e8cf-4c1f-baf6-6b09050999f3\"}}\n"+
 "        \n"+
 "        if( msg.type == \"ethereum_bg2content\") {\n"+
-"            orig_msg = this.message_pool[ msg.id ] \n"+
+"            orig_msg = this.message_pool.get( msg.id )\n"+
 "            if( orig_msg )\n"+
 "            {\n"+
 "                 delete this.message_pool[ msg.id ]\n"+

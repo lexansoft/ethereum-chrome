@@ -15771,7 +15771,7 @@ Web3 = require( "web3")
 web3 = new Web3( httpProvider )
 
 tabs = require( "./tabs.js" )
-Queue = require( "./queue.js" )
+
 
 function _call_content_page( tab, dataload, id ) {
       chrome.tabs.sendMessage(tab.id, 
@@ -15822,7 +15822,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatedTab) {
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     tabs.deleteTab( tabId )
 });
-},{"./httpprovider.js":86,"./queue.js":87,"./tabs.js":88,"web3":37}],86:[function(require,module,exports){
+},{"./httpprovider.js":86,"./tabs.js":88,"web3":37}],86:[function(require,module,exports){
 module.exports = new function HttpProvider(host) {
     this.host = host || 'http://localhost:8545';
 
@@ -15886,7 +15886,7 @@ module.exports = new function HttpProvider(host) {
 // A simple cache of transactions.
 
 
-module.exports = new function( max_total, expiration_time ) {
+module.exports = function( max_total, expiration_time ) {
     this.max_total = max_total
     this.expiration_time = expiration_time 
     
@@ -15930,6 +15930,7 @@ module.exports = new function( max_total, expiration_time ) {
 // Module encapsulates the Tab information
 var ICON_BLINKING_TIMEOUT = 300
 
+Queue = require( "./queue.js" )
 
 module.exports = new function() {
     this.all_tabs = {}
@@ -15951,6 +15952,7 @@ module.exports = new function() {
             current_icon_index: 0, 
             user_action_is_needed: false,
             icon_is_shown: false,
+            queue: new Queue( 1000, 15*60*1000 ),
 
             flipPageIcon: function flipPageIcon() {
                 this.current_icon_index = ( this.current_icon_index + 1 ) % 2
@@ -16003,7 +16005,7 @@ module.exports = new function() {
         }
     }
 }();
-},{}],89:[function(require,module,exports){
+},{"./queue.js":87}],89:[function(require,module,exports){
 var asn1 = exports;
 
 asn1.bignum = require('bn.js');
