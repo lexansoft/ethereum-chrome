@@ -44,4 +44,11 @@ module.exports = function( max_total, expiration_time ) {
     this.getN = function() {
         return Object.keys( this.transactions ).length 
     }
+    
+    this.getFirst = function() {
+        k = Object.keys( this.transactions )
+        
+        if( k.length > 0 ) return this.transactions[ k[0] ]
+        else return null        
+    }
 }

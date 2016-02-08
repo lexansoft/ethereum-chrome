@@ -21,16 +21,28 @@ import Settings from './settings.jsx';
 
 injectTapEventPlugin();
 
-
 const EPApp = React.createClass({    
     getInitialState() {
-        var props = {
-            left_nav_open: false,
-            active_pane: "info",
-            title: "Node Info"
-        };
+        var component = this
         
-        return props
+        chrome.tabs.getSelected( null, function( tab ) {
+            var tab_id = tab.id
+            chrome.runtime.getBackgroundPage( function( bg ) {
+                if( bg.tabs.getTab( tab_id ).queue.getN() > 0 ) {
+                    component.setState( { message_to_confirm:  bg.tabs.getTab( tab_id ).queue.getFirst() } ) },
+                    component.openPaneConfirmations()
+                }
+                else { component.openPaneInfo() }
+            })
+        } )        
+        
+        
+        return {
+            left_nav_open: false,
+            active_pane: "",
+            title: "",
+            message_to_confirm: null
+        }
     },    
 
     handleToggle() {  
@@ -99,39 +111,4 @@ const EPApp = React.createClass({
     )}
 });
     
-
-var app = new EPApp()
-
-chrome.tabs.getSelected( null, function( tab ) {
-    var tab_id = tab.id
-    
-//    console.log( "Tab:" + tab.id )
-//    console.log( "App:" + app )
-//    
-//    
-//    console.log( "chrome:" + JSON.stringify( chrome, 3 , 3 ) )
-
-    chrome.runtime.getBackgroundPage( function( bg ) {
-//        console.log( "tabs:" + JSON.stringify( bg.tabs, 3 , 3 ) )
-//
-//        console.log( "tab_id:" + tab_id )
-//        console.log( "bg.tabs.getTab( tab_id ):" + bg.tabs.getTab( tab_id ) )
-//        console.log( "bg.tabs.getTab( tab_id ).queue.getN():" + bg.tabs.getTab( tab_id ).queue.getN() )
-        
-        console.log( "app:" + JSON.stringify( app, 3 , 3 ) )
-        
-        if( bg.tabs.getTab( tab_id ).queue.getN() > 0 ) {
-            app.state.active_pane = "confirmations"
-        }
-        
-        ReactDOM.render( app, document.getElementById('app'));
-        
-    })
-    //t = bg.tabs.getTab( tab.id )
-//    if( t.queue.getN() > 0 ) {
-////         props.active_pane = "confirmations";
-////         props.title = "Confirmations";
-//    }
-} )
-                        
-//ReactDOM.render(<EPApp/>, document.getElementById('app'));
+ReactDOM.render(<EPApp/>, document.getElementById('app'));
