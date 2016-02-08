@@ -40,4 +40,8 @@ module.exports = function( max_total, expiration_time ) {
     this.delete = function( id ) {
         delete this.transactions[ r.id ];
     }
+    
+    this.getN = function() {
+        return Object.keys( this.transactions ).length 
+    }
 }

@@ -43,6 +43,9 @@ s.textContent = '(' + function(send_event_name, reply_event_name ) {
         // Functionality to notify content script
         var event = document.createEvent('Events');
         event.initEvent(send_event_name, true, false);
+        
+        console.log( "_call_ethereum_plugin message: " +  JSON.stringify(message) )
+        
         transporter.setAttribute('data', JSON.stringify(message));
         (document.body||document.documentElement).appendChild(transporter);
         transporter.dispatchEvent(event);

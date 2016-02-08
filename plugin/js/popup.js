@@ -34286,11 +34286,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var EPApp = _react2.default.createClass({
     displayName: 'EPApp',
     getInitialState: function getInitialState() {
-        return {
+        var props = {
             left_nav_open: false,
             active_pane: "info",
             title: "Node Info"
         };
+
+        return props;
     },
     handleToggle: function handleToggle() {
         this.setState({ left_nav_open: !this.state.left_nav_open });
@@ -34378,7 +34380,40 @@ var EPApp = _react2.default.createClass({
     }
 });
 
-_reactDom2.default.render(_react2.default.createElement(EPApp, null), document.getElementById('app'));
+var app = new EPApp();
+
+chrome.tabs.getSelected(null, function (tab) {
+    var tab_id = tab.id;
+
+    //    console.log( "Tab:" + tab.id )
+    //    console.log( "App:" + app )
+    //   
+    //   
+    //    console.log( "chrome:" + JSON.stringify( chrome, 3 , 3 ) )
+
+    chrome.runtime.getBackgroundPage(function (bg) {
+        //        console.log( "tabs:" + JSON.stringify( bg.tabs, 3 , 3 ) )
+        //
+        //        console.log( "tab_id:" + tab_id )
+        //        console.log( "bg.tabs.getTab( tab_id ):" + bg.tabs.getTab( tab_id ) )
+        //        console.log( "bg.tabs.getTab( tab_id ).queue.getN():" + bg.tabs.getTab( tab_id ).queue.getN() )
+
+        console.log("app:" + JSON.stringify(app, 3, 3));
+
+        if (bg.tabs.getTab(tab_id).queue.getN() > 0) {
+            app.state.active_pane = "confirmations";
+        }
+
+        _reactDom2.default.render(app, document.getElementById('app'));
+    });
+    //t = bg.tabs.getTab( tab.id )
+    //    if( t.queue.getN() > 0 ) {
+    ////         props.active_pane = "confirmations";
+    ////         props.title = "Confirmations";
+    //    }
+});
+
+//ReactDOM.render(<EPApp/>, document.getElementById('app'));
 
 },{"./about.jsx":281,"./accounts.jsx":282,"./confirmations.jsx":283,"./node_info.jsx":284,"./settings.jsx":286,"material-ui/lib/app-bar":66,"material-ui/lib/icon-button":72,"material-ui/lib/left-nav":73,"material-ui/lib/menus/icon-menu":81,"material-ui/lib/menus/menu-item":82,"material-ui/lib/svg-icons/action/account-balance":109,"material-ui/lib/svg-icons/action/copyright":110,"material-ui/lib/svg-icons/action/info-outline":111,"material-ui/lib/svg-icons/action/settings":112,"material-ui/lib/svg-icons/communication/vpn-key":113,"material-ui/lib/svg-icons/navigation/close":117,"react":279,"react-dom":139,"react-tap-event-plugin":144}],286:[function(require,module,exports){
 'use strict';

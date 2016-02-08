@@ -4,6 +4,7 @@ Web3 = require( "web3")
 web3 = new Web3( httpProvider )
 
 tabs = require( "./tabs.js" )
+accounts = require( "./accounts.js" )
 
 
 function _call_content_page( tab, dataload, id ) {
@@ -17,12 +18,22 @@ function _call_content_page( tab, dataload, id ) {
 
 chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
     if (message && message.type == 'ethereum_content2bg') {
-        
+
         tabs.showPageIcon( sender.tab.id )
-        //tabs.needUserAction( sender.tab.id, true ) //DEBUG
-        
+
         if( !!message.request && !!message.request.type && message.request.data ) {
             if( message.request.type == "sendAsync" ) {
+
+                if( message.request.data.method == "eth_sendTransaction" ) {
+                    addr_from = message.request.data.params[0].from
+
+                    if( accounts.isLocked( addr_from ) ) {
+                        tabs.getTab( sender.tab.id ).queue.add( message, message.id );
+                        tabs.needUserAction( sender.tab.id, true )
+                        return;
+                    }
+                }
+
                 httpProvider.sendAsync( message.request.data, function( error, data ) {
                     _call_content_page( sender.tab, { error:error, data:data }, message.request.id );
                 })
@@ -43,7 +54,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
                 message.request.id );
         }
     }
-    
+
     sendResponse( {} )
 });
 
