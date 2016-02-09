@@ -38,7 +38,7 @@ module.exports = function( max_total, expiration_time ) {
     }
     
     this.delete = function( id ) {
-        delete this.transactions[ r.id ];
+        delete this.transactions[ id ];
     }
     
     this.getN = function() {

@@ -51,10 +51,18 @@ page_str_js="\n"+
 "//        onPlugingEvent={\"type\":\"ethereum_bg2content\",\"dataload\":{\"error\":null,\"data\":{\"id\":1,\"jsonrpc\":\"2.0\",\"result\":\"0xba43b7400\"},\"id\":\"ad5c168f-e8cf-4c1f-baf6-6b09050999f3\"}}\n"+
 "        \n"+
 "        if( msg.type == \"ethereum_bg2content\") {\n"+
+"            \n"+
+"            console.log( \"Got back ethereum_bg2content id: \" + msg.id);\n"+
+"            \n"+
+"            console.log( \"msg=\" + JSON.stringify( msg ) );\n"+
+"            \n"+
 "            orig_msg = this.message_pool.get( msg.id )\n"+
 "            if( orig_msg )\n"+
 "            {\n"+
+"                 console.log( \"Found original message\" );\n"+
 "                 delete this.message_pool[ msg.id ]\n"+
+"                 console.log( \"msg.dataload.error:\" + msg.dataload.error );\n"+
+"                 console.log( \"msg.dataload.data:\" + msg.dataload.data );\n"+
 "                 orig_msg.callback( msg.dataload.error, msg.dataload.data )                    \n"+
 "            }\n"+
 "            else\n"+
@@ -62,8 +70,6 @@ page_str_js="\n"+
 "                console.log( \"No original message found. Probably expired. id: \" + msg.id );        \n"+
 "            }\n"+
 "        }\n"+
-"        \n"+
-"        console.log( \"Got back to provider!!!\");\n"+
 "    }\n"+
 "};\n"+
 "\n"+

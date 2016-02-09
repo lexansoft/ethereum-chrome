@@ -7,14 +7,26 @@ tabs = require( "./tabs.js" )
 accounts = require( "./accounts.js" )
 
 
-function _call_content_page( tab, dataload, id ) {
-      chrome.tabs.sendMessage(tab.id, 
+function _call_content_page( tab, dataload, id, callback ) {
+    
+      if( typeof tab == "object" ) tab_id = tab.id
+      else tab_id = tab
+    
+      console.log( "_call_content_page = " + JSON.stringify( dataload, 3, 3 ))
+      
+      
+      chrome.tabs.sendMessage( tab_id, 
       {
         type: 'ethereum_bg2content', 
         dataload: dataload,
         id: id
-      }, function(response) {});
+      }, function(response) {
+          if( callback ) callback()
+      });
 }
+
+window._call_content_page = _call_content_page //DEBUG
+
 
 chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
     if (message && message.type == 'ethereum_content2bg') {
@@ -28,7 +40,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
                     addr_from = message.request.data.params[0].from
 
                     if( accounts.isLocked( addr_from ) ) {
-                        tabs.getTab( sender.tab.id ).queue.add( message, message.id );
+                        tabs.getTab( sender.tab.id ).queue.add( message.request.data, message.request.id );
                         tabs.needUserAction( sender.tab.id, true )
                         return;
                     }
@@ -42,7 +54,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
             {
                 _call_content_page( 
                     sender.tab, 
-                    { error:new Error( "ethereum_plugin: wrong message type:" + message.request.type ) },
+                    { error: "ethereum_plugin: wrong message type:" + message.request.type },
                     message.request.id );
             }
         } 
@@ -50,7 +62,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
         {
             _call_content_page( 
                 sender.tab, 
-                { error:new Error( "ethereum_plugin: wrong sendAsync parameters" )}, 
+                { error: "ethereum_plugin: wrong sendAsync parameters" }, 
                 message.request.id );
         }
     }

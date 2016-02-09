@@ -24,15 +24,18 @@ injectTapEventPlugin();
 const EPApp = React.createClass({    
     getInitialState() {
         var component = this
+        var tab_id = 0
         
-        chrome.tabs.getSelected( null, function( tab ) {
-            var tab_id = tab.id
-            chrome.runtime.getBackgroundPage( function( bg ) {
-                if( bg.tabs.getTab( tab_id ).queue.getN() > 0 ) {
-                    component.setState( { message_to_confirm:  bg.tabs.getTab( tab_id ).queue.getFirst() } ) },
-                    component.openPaneConfirmations()
+        chrome.tabs.getSelected( null, tab => {
+            this.tab_id = tab.id
+            chrome.runtime.getBackgroundPage( bg => {
+                window.tab = tab = bg.tabs.getTab( this.tab_id ) 
+                
+                if( tab.queue.getN() > 0 ) {
+                    this.setState( { message_to_confirm:  bg.tabs.getTab( this.tab_id ).queue.getFirst() } )
+                    this.openPaneConfirmations()
                 }
-                else { component.openPaneInfo() }
+                else { this.openPaneInfo() }
             })
         } )        
         
@@ -90,22 +93,21 @@ const EPApp = React.createClass({
               <MenuItem primaryText="About" leftIcon={<ActionCopyright />}  onTouchTap={ this.openPaneAbout } /> 
             </LeftNav>    
 
-                
-                <div style={ {display: ( this.state.active_pane == "info" ? "block" : "none" ) } } > 
-                    <NodeInfo/>
-                </div>
-                <div style={ {display: ( this.state.active_pane == "accounts" ? "block" : "none" ) } } > 
-                    <Accounts/>
-                </div>
-                <div style={ {display: ( this.state.active_pane == "confirmations" ? "block" : "none" ) } } > 
-                    <Confirmations/>
-                </div>
-                <div style={ {display: ( this.state.active_pane == "settings" ? "block" : "none" ) } } > 
-                    <Settings/>
-                </div>
-                <div style={ {display: ( this.state.active_pane == "about" ? "block" : "none" ) } } > 
-                    <About/>
-                </div>
+            <div style={ {display: ( this.state.active_pane == "info" ? "block" : "none" ) } } > 
+                <NodeInfo/>
+            </div>
+            <div style={ {display: ( this.state.active_pane == "accounts" ? "block" : "none" ) } } > 
+                <Accounts/>
+            </div>
+            <div style={ {display: ( this.state.active_pane == "confirmations" ? "block" : "none" ) } } > 
+                <Confirmations  message_to_confirm={this.state.message_to_confirm}/>
+            </div>
+            <div style={ {display: ( this.state.active_pane == "settings" ? "block" : "none" ) } } > 
+                <Settings/>
+            </div>
+            <div style={ {display: ( this.state.active_pane == "about" ? "block" : "none" ) } } > 
+                <About/>
+            </div>
                 
         </div>
     )}

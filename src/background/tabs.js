@@ -8,9 +8,7 @@ module.exports = new function() {
     
     this.needUserAction = function( tab_id, v ) {
         tab = this.getTab( tab_id )
-           
-        tab.user_action_is_needed = v
-        if( v ) tab.flipPageIcon()
+        tab.needUserAction( v )
     }
         
     this.getTab = function( tab_id ) {
@@ -28,7 +26,7 @@ module.exports = new function() {
             flipPageIcon: function flipPageIcon() {
                 this.current_icon_index = ( this.current_icon_index + 1 ) % 2
 
-                if( this.current_icon_index == 0 ) {
+                if( this.current_icon_index == 0 || !this.user_action_is_needed) {
                     chrome.pageAction.setIcon( {
                         tabId: this.tab_id,
                         path: {
@@ -50,8 +48,26 @@ module.exports = new function() {
                 if( this.user_action_is_needed ) {
                     me = this
                     setTimeout( function() { me.flipPageIcon() }, ICON_BLINKING_TIMEOUT )
-                }    
-            }    
+                }   
+            },    
+            rejectTransaction : function( msg ) {
+                this.queue.delete( msg.id )
+                
+                if( this.queue.getN() == 0 ) this.needUserAction( false )
+                
+                window._call_content_page( 
+                    this.tab_id, 
+                    { error: "ethereum_plugin: Transaction rejected by the user" },
+                    msg.id,
+                    () => window.close()
+                );
+                
+               
+            },
+            needUserAction : function( v ) {
+                this.user_action_is_needed = v
+                if( v ) tab.flipPageIcon()                
+            }
         }
         
         this.all_tabs[ tab_id ] = tab
@@ -75,4 +91,5 @@ module.exports = new function() {
             delete this.all_tabs[ tab_id ]
         }
     }
+    
 }();

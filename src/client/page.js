@@ -51,10 +51,18 @@ var PluginProvider = function PluginProvider() {
 //        onPlugingEvent={"type":"ethereum_bg2content","dataload":{"error":null,"data":{"id":1,"jsonrpc":"2.0","result":"0xba43b7400"},"id":"ad5c168f-e8cf-4c1f-baf6-6b09050999f3"}}
         
         if( msg.type == "ethereum_bg2content") {
+            
+            console.log( "Got back ethereum_bg2content id: " + msg.id);
+            
+            console.log( "msg=" + JSON.stringify( msg ) );
+            
             orig_msg = this.message_pool.get( msg.id )
             if( orig_msg )
             {
+                 console.log( "Found original message" );
                  delete this.message_pool[ msg.id ]
+                 console.log( "msg.dataload.error:" + msg.dataload.error );
+                 console.log( "msg.dataload.data:" + msg.dataload.data );
                  orig_msg.callback( msg.dataload.error, msg.dataload.data )                    
             }
             else
@@ -62,8 +70,6 @@ var PluginProvider = function PluginProvider() {
                 console.log( "No original message found. Probably expired. id: " + msg.id );        
             }
         }
-        
-        console.log( "Got back to provider!!!");
     }
 };
 

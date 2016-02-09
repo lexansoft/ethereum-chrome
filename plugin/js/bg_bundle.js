@@ -15783,14 +15783,26 @@ tabs = require( "./tabs.js" )
 accounts = require( "./accounts.js" )
 
 
-function _call_content_page( tab, dataload, id ) {
-      chrome.tabs.sendMessage(tab.id, 
+function _call_content_page( tab, dataload, id, callback ) {
+    
+      if( typeof tab == "object" ) tab_id = tab.id
+      else tab_id = tab
+    
+      console.log( "_call_content_page = " + JSON.stringify( dataload, 3, 3 ))
+      
+      
+      chrome.tabs.sendMessage( tab_id, 
       {
         type: 'ethereum_bg2content', 
         dataload: dataload,
         id: id
-      }, function(response) {});
+      }, function(response) {
+          if( callback ) callback()
+      });
 }
+
+window._call_content_page = _call_content_page //DEBUG
+
 
 chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
     if (message && message.type == 'ethereum_content2bg') {
@@ -15804,7 +15816,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
                     addr_from = message.request.data.params[0].from
 
                     if( accounts.isLocked( addr_from ) ) {
-                        tabs.getTab( sender.tab.id ).queue.add( message, message.id );
+                        tabs.getTab( sender.tab.id ).queue.add( message.request.data, message.request.id );
                         tabs.needUserAction( sender.tab.id, true )
                         return;
                     }
@@ -15818,7 +15830,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
             {
                 _call_content_page( 
                     sender.tab, 
-                    { error:new Error( "ethereum_plugin: wrong message type:" + message.request.type ) },
+                    { error: "ethereum_plugin: wrong message type:" + message.request.type },
                     message.request.id );
             }
         } 
@@ -15826,7 +15838,7 @@ chrome.runtime.onMessage.addListener( function(message, sender, sendResponse ) {
         {
             _call_content_page( 
                 sender.tab, 
-                { error:new Error( "ethereum_plugin: wrong sendAsync parameters" )}, 
+                { error: "ethereum_plugin: wrong sendAsync parameters" }, 
                 message.request.id );
         }
     }
@@ -15944,11 +15956,18 @@ module.exports = function( max_total, expiration_time ) {
     }
     
     this.delete = function( id ) {
-        delete this.transactions[ r.id ];
+        delete this.transactions[ id ];
     }
     
     this.getN = function() {
         return Object.keys( this.transactions ).length 
+    }
+    
+    this.getFirst = function() {
+        k = Object.keys( this.transactions )
+        
+        if( k.length > 0 ) return this.transactions[ k[0] ]
+        else return null        
     }
 }
 },{}],89:[function(require,module,exports){
@@ -15962,9 +15981,7 @@ module.exports = new function() {
     
     this.needUserAction = function( tab_id, v ) {
         tab = this.getTab( tab_id )
-           
-        tab.user_action_is_needed = v
-        if( v ) tab.flipPageIcon()
+        tab.needUserAction( v )
     }
         
     this.getTab = function( tab_id ) {
@@ -15982,7 +15999,7 @@ module.exports = new function() {
             flipPageIcon: function flipPageIcon() {
                 this.current_icon_index = ( this.current_icon_index + 1 ) % 2
 
-                if( this.current_icon_index == 0 ) {
+                if( this.current_icon_index == 0 || !this.user_action_is_needed) {
                     chrome.pageAction.setIcon( {
                         tabId: this.tab_id,
                         path: {
@@ -16004,8 +16021,26 @@ module.exports = new function() {
                 if( this.user_action_is_needed ) {
                     me = this
                     setTimeout( function() { me.flipPageIcon() }, ICON_BLINKING_TIMEOUT )
-                }    
-            }    
+                }   
+            },    
+            rejectTransaction : function( msg ) {
+                this.queue.delete( msg.id )
+                
+                if( this.queue.getN() == 0 ) this.needUserAction( false )
+                
+                window._call_content_page( 
+                    this.tab_id, 
+                    { error: "ethereum_plugin: Transaction rejected by the user" },
+                    msg.id,
+                    () => window.close()
+                );
+                
+               
+            },
+            needUserAction : function( v ) {
+                this.user_action_is_needed = v
+                if( v ) tab.flipPageIcon()                
+            }
         }
         
         this.all_tabs[ tab_id ] = tab
@@ -16029,6 +16064,7 @@ module.exports = new function() {
             delete this.all_tabs[ tab_id ]
         }
     }
+    
 }();
 },{"./queue.js":88}],90:[function(require,module,exports){
 var asn1 = exports;
