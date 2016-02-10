@@ -60,7 +60,7 @@ var PluginProvider = function PluginProvider() {
             if( orig_msg )
             {
                  console.log( "Found original message" );
-                 delete this.message_pool[ msg.id ]
+                 this.message_pool.delete( msg.id )
                  console.log( "msg.dataload.error:" + msg.dataload.error );
                  console.log( "msg.dataload.data:" + msg.dataload.data );
                  orig_msg.callback( msg.dataload.error, msg.dataload.data )                    
@@ -77,21 +77,6 @@ var PluginProvider = function PluginProvider() {
 window.Web3 = ___require___( "web3" )
 window.web3 = new Web3( new PluginProvider() );
 
-//DEBUG
-
-window.hello = function(string) {
-        _call_ethereum_plugin
-        ( 
-            {
-                type: 'sayhello',
-                data: string
-            }, 
-            function(response) 
-            {
-                alert('Background said: ' + response);
-            }
-        );
-    };    
     
 console.log( "page.js completed!!!")
 

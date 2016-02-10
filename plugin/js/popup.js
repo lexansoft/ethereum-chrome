@@ -35713,7 +35713,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         },
 
         onReject: function onReject() {
-            window.tab.rejectTransaction(this.props.message_to_confirm);
+            window.tab.rejectTransaction(this.props.message_to_confirm, function () {
+                console.log("Closing window");
+                window.close();
+            });
         },
 
         render: function render() {

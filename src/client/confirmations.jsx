@@ -7,24 +7,27 @@ import RaisedButton from 'material-ui/lib/raised-button';
   module.exports = React.createClass({
     
     getInitialState: function() {
-        
         return {
             message_to_confirm: null
         }
     },
       
     onReject: function() {
-        window.tab.rejectTransaction( this.props.message_to_confirm )
+        window.tab.rejectTransaction( this.props.message_to_confirm, function() { 
+            console.log( "Closing window")
+            window.close() 
+        })
+    },  
+      
+    onConfirm: function() {
+        window.tab.confirmTransaction( this.props.message_to_confirm, function() { 
+        })        
     },  
       
     render: function() {
-        
 //        console.log( JSON.stringify( this.props.message_to_confirm, 3, 3 ))
-        
         var tr_exists = !!this.props.message_to_confirm
-        
 //        console.log( "tr_exists=" + tr_exists )
-        
         var block
         
         if( tr_exists ) {
@@ -62,8 +65,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
                         label="Confirm" 
                         primary={true} 
                         style={{ margin: '1em' }} 
-                        onMouseDown = { () => {
-                        } }
+                        onMouseDown = { this.onConfirm }
                     />
                     
                 </div>;

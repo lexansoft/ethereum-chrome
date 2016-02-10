@@ -75,7 +75,7 @@ document.addEventListener( EVENT_FROM_PAGE, function(e) {
     }
 });
 
-chrome.runtime.onMessage.addListener( function(message ) {
+chrome.runtime.onMessage.addListener( function(message, sender, callback ) {
     if (message && message.type == 'ethereum_bg2content') {
         
         console.log( "Got message back!!!") 
@@ -92,6 +92,8 @@ chrome.runtime.onMessage.addListener( function(message ) {
 
         document.documentElement.appendChild(s);
         s.parentNode.removeChild(s);
+        
+        if( callback ) callback( "OK")
     }
 });
 console.log( "Content file completed!!!")

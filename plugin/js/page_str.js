@@ -60,7 +60,7 @@ page_str_js="\n"+
 "            if( orig_msg )\n"+
 "            {\n"+
 "                 console.log( \"Found original message\" );\n"+
-"                 delete this.message_pool[ msg.id ]\n"+
+"                 this.message_pool.delete( msg.id )\n"+
 "                 console.log( \"msg.dataload.error:\" + msg.dataload.error );\n"+
 "                 console.log( \"msg.dataload.data:\" + msg.dataload.data );\n"+
 "                 orig_msg.callback( msg.dataload.error, msg.dataload.data )                    \n"+

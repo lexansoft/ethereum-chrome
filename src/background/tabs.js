@@ -50,19 +50,37 @@ module.exports = new function() {
                     setTimeout( function() { me.flipPageIcon() }, ICON_BLINKING_TIMEOUT )
                 }   
             },    
-            rejectTransaction : function( msg ) {
-                this.queue.delete( msg.id )
+            rejectTransaction : function( msg, callback ) {
+                var m = this.queue.get( msg.id )
                 
-                if( this.queue.getN() == 0 ) this.needUserAction( false )
+                if( m ) {
+                    this.queue.delete( msg.id )
+                    if( this.queue.getN() == 0 ) this.needUserAction( false )
+
+
+                    window._call_content_page( 
+                        this.tab_id, 
+                        { error: "ethereum_plugin: Transaction rejected by the user" },
+                        msg.id,
+                        callback
+                    );
+                }
+                else {
+                    if( callback ) callback();
+                }
+            },
+            confirmTransaction : function( msg, callback ) {
+                var m = this.queue.get( msg.id )
                 
-                window._call_content_page( 
-                    this.tab_id, 
-                    { error: "ethereum_plugin: Transaction rejected by the user" },
-                    msg.id,
-                    () => window.close()
-                );
-                
-               
+                if( m ) {
+                    //Unlock the account
+                    
+                    //TODO
+                }
+                else {
+                    console.log( "no transaction to confirm. Probably waited too long" )
+                    if( callback ) callback();
+                }
             },
             needUserAction : function( v ) {
                 this.user_action_is_needed = v

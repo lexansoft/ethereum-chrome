@@ -15,14 +15,18 @@ function _call_content_page( tab, dataload, id, callback ) {
       console.log( "_call_content_page = " + JSON.stringify( dataload, 3, 3 ))
       
       
-      chrome.tabs.sendMessage( tab_id, 
-      {
-        type: 'ethereum_bg2content', 
-        dataload: dataload,
-        id: id
-      }, function(response) {
-          if( callback ) callback()
-      });
+      chrome.tabs.sendMessage( 
+          tab_id, 
+          {
+            type: 'ethereum_bg2content', 
+            dataload: dataload,
+            id: id
+          },
+          {},
+          function(response) {
+            if( callback ) callback()
+          }
+      );
 }
 
 window._call_content_page = _call_content_page //DEBUG

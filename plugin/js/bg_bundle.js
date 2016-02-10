@@ -15791,14 +15791,18 @@ function _call_content_page( tab, dataload, id, callback ) {
       console.log( "_call_content_page = " + JSON.stringify( dataload, 3, 3 ))
       
       
-      chrome.tabs.sendMessage( tab_id, 
-      {
-        type: 'ethereum_bg2content', 
-        dataload: dataload,
-        id: id
-      }, function(response) {
-          if( callback ) callback()
-      });
+      chrome.tabs.sendMessage( 
+          tab_id, 
+          {
+            type: 'ethereum_bg2content', 
+            dataload: dataload,
+            id: id
+          },
+          {},
+          function(response) {
+            if( callback ) callback()
+          }
+      );
 }
 
 window._call_content_page = _call_content_page //DEBUG
@@ -16023,19 +16027,24 @@ module.exports = new function() {
                     setTimeout( function() { me.flipPageIcon() }, ICON_BLINKING_TIMEOUT )
                 }   
             },    
-            rejectTransaction : function( msg ) {
-                this.queue.delete( msg.id )
+            rejectTransaction : function( msg, callback ) {
+                var m = this.queue.get( msg.id )
                 
-                if( this.queue.getN() == 0 ) this.needUserAction( false )
-                
-                window._call_content_page( 
-                    this.tab_id, 
-                    { error: "ethereum_plugin: Transaction rejected by the user" },
-                    msg.id,
-                    () => window.close()
-                );
-                
-               
+                if( m ) {
+                    this.queue.delete( msg.id )
+                    if( this.queue.getN() == 0 ) this.needUserAction( false )
+
+
+                    window._call_content_page( 
+                        this.tab_id, 
+                        { error: "ethereum_plugin: Transaction rejected by the user" },
+                        msg.id,
+                        callback
+                    );
+                }
+                else {
+                    if( callback ) callback();
+                }
             },
             needUserAction : function( v ) {
                 this.user_action_is_needed = v
