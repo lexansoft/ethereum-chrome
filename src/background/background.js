@@ -12,7 +12,7 @@ accounts = require( "./accounts.js" )
 
 //web3.setProvider( new web3.providers.IpcProvider('\\\\.\\pipe\\geth.ipc', require('net')) );
 
-net = require( "net" )
+net = require( "net-browserify" )
 
 web3.setProvider( new web3.providers.IpcProvider( '', net ) );
 
