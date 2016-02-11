@@ -35706,7 +35706,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         displayName: 'exports',
 
         getInitialState: function getInitialState() {
-
             return {
                 message_to_confirm: null
             };
@@ -35719,14 +35718,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
             });
         },
 
+        onConfirm: function onConfirm(event) {
+            window.tab.confirmTransaction(this.props.message_to_confirm, event.target.value, function () {});
+        },
+
         render: function render() {
-
             //        console.log( JSON.stringify( this.props.message_to_confirm, 3, 3 ))
-
             var tr_exists = !!this.props.message_to_confirm;
-
             //        console.log( "tr_exists=" + tr_exists )
-
             var block;
 
             if (tr_exists) {
@@ -35777,7 +35776,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                         label: 'Confirm',
                         primary: true,
                         style: { margin: '1em' },
-                        onMouseDown: function onMouseDown() {}
+                        onMouseDown: this.onConfirm
                     })
                 );
             } else {

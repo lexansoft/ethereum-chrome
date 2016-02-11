@@ -69,11 +69,15 @@ module.exports = new function() {
                     if( callback ) callback();
                 }
             },
-            confirmTransaction : function( msg, callback ) {
+            confirmTransaction : function( msg, pass, callback ) {
                 var m = this.queue.get( msg.id )
                 
                 if( m ) {
-                    //Unlock the account
+                    web3.personal.unlockAccount( msg.data.params[0].from, pass, 2, function( err, data) {
+                        
+                        console.log( "unlock returns:" + err )                       
+                        if( callback ) callback();    
+                    } )
                     
                     //TODO
                 }

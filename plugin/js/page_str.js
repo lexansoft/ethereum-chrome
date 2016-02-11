@@ -77,21 +77,6 @@ page_str_js="\n"+
 "window.Web3 = ___require___( \"web3\" )\n"+
 "window.web3 = new Web3( new PluginProvider() );\n"+
 "\n"+
-"//DEBUG\n"+
-"\n"+
-"window.hello = function(string) {\n"+
-"        _call_ethereum_plugin\n"+
-"        ( \n"+
-"            {\n"+
-"                type: 'sayhello',\n"+
-"                data: string\n"+
-"            }, \n"+
-"            function(response) \n"+
-"            {\n"+
-"                alert('Background said: ' + response);\n"+
-"            }\n"+
-"        );\n"+
-"    };    \n"+
 "    \n"+
 "console.log( \"page.js completed!!!\")\n"+
 "\n"+

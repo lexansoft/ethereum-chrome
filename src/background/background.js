@@ -6,6 +6,31 @@ web3 = new Web3( httpProvider )
 tabs = require( "./tabs.js" )
 accounts = require( "./accounts.js" )
 
+//const ipcProviderWrapper = require('./ipcProviderWrapper.js');
+
+//web3 = new Web3(new Web3.providers.IpcProvider( '', ipcProviderWrapper ) );
+
+//web3.setProvider( new web3.providers.IpcProvider('\\\\.\\pipe\\geth.ipc', require('net')) );
+
+net = require( "net" )
+
+web3.setProvider( new web3.providers.IpcProvider( '', net ) );
+
+
+web3._extend({
+            property: 'personal',
+            methods:
+            [
+                new web3._extend.Method({
+                    name: 'unlockAccount',
+                    call: 'personal_unlockAccount',
+                    params: 3,
+                    inputFormatter: [web3._extend.formatters.formatInputString,web3._extend.formatters.formatInputString,web3._extend.formatters.formatInputInt],
+                    outputFormatter: web3._extend.formatters.formatOutputBool
+                })
+            ],
+        });
+
 
 function _call_content_page( tab, dataload, id, callback ) {
     
