@@ -14,7 +14,7 @@ accounts = require( "./accounts.js" )
 
 net = require( "net-browserify" )
 
-web3.setProvider( new web3.providers.IpcProvider( '', net ) );
+web3.setProvider( new web3.providers.IpcProvider( require( './getipcpath.js'), net ) );
 
 
 web3._extend({
