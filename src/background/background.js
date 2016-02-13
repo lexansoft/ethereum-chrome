@@ -12,9 +12,23 @@ accounts = require( "./accounts.js" )
 
 //web3.setProvider( new web3.providers.IpcProvider('\\\\.\\pipe\\geth.ipc', require('net')) );
 
-net = require( "net-browserify" )
 
-web3.setProvider( new web3.providers.IpcProvider( require( './getipcpath.js'), net ) );
+ipc = require( "node-ipc" )
+
+ipc.config.id = 'test';
+ipc.config.retry = 1000;
+
+ipc.connectTo( "test", require( './getipcpath.js'), function() {
+    
+    ipc = ipc
+    
+    
+});
+
+
+//net = require( "net-browserify" )
+//
+//web3.setProvider( new web3.providers.IpcProvider( require( './getipcpath.js'), net ) );
 
 
 web3._extend({
