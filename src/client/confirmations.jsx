@@ -20,7 +20,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
     },  
       
     onConfirm: function( event ) {
-        window.tab.confirmTransaction( this.props.message_to_confirm, event.target.value,  function() { 
+        window.tab.confirmTransaction( this.props.message_to_confirm, this.state.password,  function() { 
         })        
     },  
       
@@ -53,6 +53,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
                     <TextField
                         hintText="Password"
                         type="password"
+                        onChange = { e => this.setState( {password: e.target.value} ) }
                     /><br/>
                     
                     <RaisedButton 

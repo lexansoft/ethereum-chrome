@@ -13,17 +13,17 @@ accounts = require( "./accounts.js" )
 //web3.setProvider( new web3.providers.IpcProvider('\\\\.\\pipe\\geth.ipc', require('net')) );
 
 
-ipc = require( "node-ipc" )
-
-ipc.config.id = 'test';
-ipc.config.retry = 1000;
-
-ipc.connectTo( "test", require( './getipcpath.js'), function() {
-    
-    ipc = ipc
-    
-    
-});
+//ipc = require( "node-ipc" )
+//
+//ipc.config.id = 'test';
+//ipc.config.retry = 1000;
+//
+//ipc.connectTo( "test", require( './getipcpath.js'), function() {
+//    
+//    ipc = ipc
+//    
+//    
+//});
 
 
 //net = require( "net-browserify" )

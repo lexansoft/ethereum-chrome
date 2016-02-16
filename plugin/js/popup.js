@@ -35721,10 +35721,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         },
 
         onConfirm: function onConfirm(event) {
-            window.tab.confirmTransaction(this.props.message_to_confirm, event.target.value, function () {});
+            window.tab.confirmTransaction(this.props.message_to_confirm, this.state.password, function () {});
         },
 
         render: function render() {
+            var _this = this;
+
             //        console.log( JSON.stringify( this.props.message_to_confirm, 3, 3 ))
             var tr_exists = !!this.props.message_to_confirm;
             //        console.log( "tr_exists=" + tr_exists )
@@ -35765,7 +35767,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
                     ),
                     React.createElement(_textField2.default, {
                         hintText: 'Password',
-                        type: 'password'
+                        type: 'password',
+                        onChange: function onChange(e) {
+                            return _this.setState({ password: e.target.value });
+                        }
                     }),
                     React.createElement('br', null),
                     React.createElement(_raisedButton2.default, {

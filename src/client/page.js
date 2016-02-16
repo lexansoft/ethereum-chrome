@@ -54,7 +54,7 @@ var PluginProvider = function PluginProvider() {
             
             console.log( "Got back ethereum_bg2content id: " + msg.id);
             
-            console.log( "msg=" + JSON.stringify( msg ) );
+            console.log( "msg=" + JSON.stringify( msg, 3, 3 ) );
             
             orig_msg = this.message_pool.get( msg.id )
             if( orig_msg )
@@ -62,7 +62,8 @@ var PluginProvider = function PluginProvider() {
                  console.log( "Found original message" );
                  this.message_pool.delete( msg.id )
                  console.log( "msg.dataload.error:" + msg.dataload.error );
-                 console.log( "msg.dataload.data:" + msg.dataload.data );
+                 console.log( "msg.dataload.data:" + JSON.stringify( msg.dataload.data, 3, 3 ) );
+                 console.log( "orig_msg:" + JSON.stringify( orig_msg, 3, 3 ) );
                  orig_msg.callback( msg.dataload.error, msg.dataload.data )                    
             }
             else

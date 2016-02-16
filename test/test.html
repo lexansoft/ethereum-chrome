@@ -57,11 +57,21 @@ var tests = [
         });
     },
     function() {
+        write( "Test: Latest Block. " )
+        web3.eth.getBlock( "latest", function( error, result ) {
+            if( error ) failed( error )
+            else {
+                write( " # " + result.number + " " )
+                passed()
+            }            
+        });
+    },
+    function() {
         write( "Test: Calling EtherId.changeID. " )
         
         domain = EID.getDomain( web3, "test", function( error, domain ) {
             if( !error ) {
-                write( " Got odoamin information OK. " )
+                write( " Got doamin information OK. " )
                 EID.changeId( web3, domain.owner, "test", "ethereum-chrome", "test_value", function( error, domain ) {
                     if( !error ) {
                         write( "Called changeId OK. " )

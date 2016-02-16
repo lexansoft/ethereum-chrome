@@ -54,7 +54,7 @@ page_str_js="\n"+
 "            \n"+
 "            console.log( \"Got back ethereum_bg2content id: \" + msg.id);\n"+
 "            \n"+
-"            console.log( \"msg=\" + JSON.stringify( msg ) );\n"+
+"            console.log( \"msg=\" + JSON.stringify( msg, 3, 3 ) );\n"+
 "            \n"+
 "            orig_msg = this.message_pool.get( msg.id )\n"+
 "            if( orig_msg )\n"+
@@ -62,7 +62,8 @@ page_str_js="\n"+
 "                 console.log( \"Found original message\" );\n"+
 "                 this.message_pool.delete( msg.id )\n"+
 "                 console.log( \"msg.dataload.error:\" + msg.dataload.error );\n"+
-"                 console.log( \"msg.dataload.data:\" + msg.dataload.data );\n"+
+"                 console.log( \"msg.dataload.data:\" + JSON.stringify( msg.dataload.data, 3, 3 ) );\n"+
+"                 console.log( \"orig_msg:\" + JSON.stringify( orig_msg, 3, 3 ) );\n"+
 "                 orig_msg.callback( msg.dataload.error, msg.dataload.data )                    \n"+
 "            }\n"+
 "            else\n"+

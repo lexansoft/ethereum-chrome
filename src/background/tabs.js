@@ -75,7 +75,8 @@ module.exports = new function() {
                 if( m ) {
                     web3.personal.unlockAccount( msg.data.params[0].from, pass, 2, function( err, data) {
                         
-                        console.log( "unlock returns:" + err )                       
+                        console.log( "unlock returns error:" + err )     
+                        console.log( "unlock returns data:" + JSON.stringify( data, 3, 3 ) );
                         if( callback ) callback();    
                     } )
                     
