@@ -20,7 +20,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
     },  
       
     onConfirm: function( event ) {
-        window.tab.confirmTransaction( this.props.message_to_confirm, this.state.password,  function() { 
+        window.tab.confirmTransaction( this.props.message_to_confirm, this.state.password,  function( erro, data ) { 
         })        
     },  
       

@@ -71,20 +71,36 @@ module.exports = new function() {
             },
             confirmTransaction : function( msg, pass, callback ) {
                 var m = this.queue.get( msg.id )
+                var tab = this
                 
                 if( m ) {
-                    web3.personal.unlockAccount( msg.data.params[0].from, pass, 2, function( err, data) {
+                    web3.personal.unlockAccount( msg.data.params[0].from, pass, 2, function( err, unlocked ) {
                         
-                        console.log( "unlock returns error:" + err )     
-                        console.log( "unlock returns data:" + JSON.stringify( data, 3, 3 ) );
-                        if( callback ) callback();    
-                    } )
+//                        console.log( "unlock returns error:" + err )     
+//                        console.log( "unlock returns unlocked:" + unlocked);
+                        
+                        if( unlocked ) {
+
+                            tab.queue.delete( msg.id )
+                            if( tab.queue.getN() == 0 ) tab.needUserAction( false )
+
+                            console.log( "m:" + JSON.stringify( m, 3, 3 ) );
+                            
+                            httpProvider.sendAsync( m, function( error, data ) {
+                                window._call_content_page( tab.tab_id, { error:error, data:data }, msg.id, callback );
+                            })                            
+                        }
+                        else
+                        {
+                            if( callback ) callback( "Wrng password", unlocked );    
+                        }
+                    })
                     
                     //TODO
                 }
                 else {
                     console.log( "no transaction to confirm. Probably waited too long" )
-                    if( callback ) callback();
+                    if( callback ) callback( new Error( "There is no transaction to confirm." ));
                 }
             },
             needUserAction : function( v ) {

@@ -35721,7 +35721,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
         },
 
         onConfirm: function onConfirm(event) {
-            window.tab.confirmTransaction(this.props.message_to_confirm, this.state.password, function () {});
+            window.tab.confirmTransaction(this.props.message_to_confirm, this.state.password, function (erro, data) {});
         },
 
         render: function render() {
