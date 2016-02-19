@@ -3,7 +3,7 @@
 
   "name": "Ethereum",
   "description": "Ethereum Gateway",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "icons": {
       "19": "images/ethereum_logo19.png",      
       "38": "images/ethereum_logo38.png",
