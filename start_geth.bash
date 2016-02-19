@@ -11,5 +11,8 @@ case $response in [nN][oO]|[nN])
         ;;
 esac
 
-geth --rpc --rpccorsdomain "*"  --unlock ${1:-""} --rpcapi "db,eth,net,personal,web3"  --autodag --rpcaddr "0.0.0.0"  --verbosity "0" --etherbase 0xb1f9faafe5f917d92ebf5b21c25dc77c2cf86000    console 2>>  /Users/alexn/geth.log 
+geth --rpc --rpcapi "db,eth,net,personal,web3" 
+
+
+# geth --rpc --rpccorsdomain "*"  --unlock ${1:-""} --rpcapi "db,eth,net,personal,web3"  --autodag --rpcaddr "0.0.0.0"  --verbosity "0" --etherbase 0xb1f9faafe5f917d92ebf5b21c25dc77c2cf86000    console 2>>  /Users/alexn/geth.log 
 
